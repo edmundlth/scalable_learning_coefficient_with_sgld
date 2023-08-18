@@ -1,5 +1,6 @@
 # Scalable Learning Coefficient Estimation with SGLD
-Installation: Run `pipenv install` in the top directory containing `Pipfile.lock` and start up the virtual environment. 
+
+Installation: Use [pipenv](https://pipenv.pypa.io/en/latest/) to install required packages by running `pipenv install` in the top directory containing `Pipfile.lock` and start up the virtual environment with `pipenv shell`. 
 
 
 # MNIST experiments
