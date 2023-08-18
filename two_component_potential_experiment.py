@@ -13,8 +13,29 @@ from concurrent.futures import ProcessPoolExecutor
 import functools
 
 from toy_potential import SGLDExperiment
-
 from utils import expand_dictionary, common_cmd_parser
+
+# from sacred import Experiment
+# from sacred.observers import MongoObserver
+# EXPERIMENT_NAME = "sgld_twocomponentpotential_experiment"
+# ex = Experiment(EXPERIMENT_NAME)
+# ex.observers.append(MongoObserver(url='localhost:27017', db_name=EXPERIMENT_NAME))
+
+# @ex.config
+# def default_config():
+#     # example configuration variables
+#     outputdir = None
+#     sampler_type = "sgld"
+#     sigma = 1.0
+#     prior_sigma = 1.0
+#     prior_exponents = [1, 2]
+#     num_training_data = 1000
+#     epsilon = 0.001
+#     num_steps = 10000
+#     no_plot = True
+#     w_init = [0.0, 0.0] # chosen to be nonzero so that we don't run into nan issues with monomial prior. 
+#     seed = 0
+#     # Add more configuration variables here
 
 
 def run_experiment(expt_config):
@@ -68,6 +89,12 @@ if __name__ == "__main__":
     parser = common_cmd_parser()
     parser.add_argument("--num_repeat", help="number of repeated experiments using successive random.split of the rng key.", type=int, default=1)
     parser.add_argument("--exponents", type=int, nargs="*", default=[1, 2])
+    parser.add_argument("--sigma", type=float, default=0.5)
+    parser.add_argument("--prior_sigma", type=float, default=1.0)
+    parser.add_argument("--epsilon", type=float, default=0.0001)
+    parser.add_argument("--num_steps", type=int, default=5000)
+    parser.add_argument("--max_workers", type=int, default=1)
+
     args = parser.parse_args()
     K1, K2 = args.exponents
 
@@ -82,8 +109,8 @@ if __name__ == "__main__":
             "num_training_data": args.num_training_data, 
             "sigma": args.sigma, 
             "prior_sigma": args.prior_sigma, 
-            "epsilon": args.epsilon[0], 
-            "num_steps": args.num_steps[0], 
+            "epsilon": args.epsilon, 
+            "num_steps": args.num_steps, 
             "rngseed": args.seeds[0], 
             "rngkey": keys,
             "sampler": "sgld"

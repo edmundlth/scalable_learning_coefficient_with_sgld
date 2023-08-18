@@ -223,26 +223,3 @@ def process_json_file(file_path):
     # Concatenate sampler and chain_length for later use
     data['sampler_chain'] = data['sampler'] + ' (' + data['chain_length'].astype(str) + ')'
     return data
-
-def generate_latex_table(df):
-    grouped = df.groupby('monomial')
-    sampler_chains = df['sampler_chain'].unique()
-
-    latex_table = "\\begin{tabular}{l|" + " c" * (len(sampler_chains) + 1) + "}\n\\toprule\n"
-    latex_table += "monomial & " + " & ".join(sampler_chains) + " & $\\lambda$ \\\\ \hline\n"
-
-    for monomial, group in grouped:
-        mean_std = group.groupby('sampler_chain')['lambdahat'].agg([np.mean, np.std])
-        row_values = [
-            f"{mean_std.loc[sc, 'mean']:.4f} ({mean_std.loc[sc, 'std']:.4f})" 
-            if sc in mean_std.index else '' 
-            for sc in sampler_chains
-        ]
-        lambda_value = f"{group['lambda'].iloc[0]:.4f}"
-
-        latex_table += monomial + " & " + " & ".join(row_values) + " & " + lambda_value + " \\\\\n"
-
-    latex_table += "\\bottomrule\n\\end{tabular}"
-
-    return latex_table
-
