@@ -156,7 +156,6 @@ class MNISTExperiment(object):
 
         variance = (loss_sum_sq - loss_sum * loss_sum / m) / (m - 1)
         func_var = float(np.sum(variance))
-        func_var = -1
         
         if verbose:
             print(
